@@ -6,15 +6,19 @@ namespace DAB2_2.Models
 {
     public class Address
     {
-        public Address(int zip, string street, int number)
+        public Address(int addressId,int zip, string street, int number, string? objId = null)
         {
+            ObjId = objId;
+            AddressId = addressId;  
             Zip = zip;
             Street = street;
             Number = number;
         }
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string AddressId { get; set; }
+        public string? ObjId { get; set; }
+
+        public int AddressId { get; set; }
         
         public int Zip { get; set; }
 

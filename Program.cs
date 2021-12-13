@@ -11,11 +11,15 @@ namespace DAB2_2
     {
         private static void Main(string[] args)
         {
+            var _ins = new Inserters();
             var _client = new MongoClient();
             var _database = _client.GetDatabase("Municipality");
 
-            var col = _database.GetCollection<Address>("Test");
-        
+            var col = _database.GetCollection<Address>("Addresses");
+
+            var addr = new Address(8, 8200, "der", 1);
+            _ins.AddAddress(addr);
+
             var hent = col
                         .Find(c => c.Zip == 8200)
                         .ToListAsync()
@@ -23,7 +27,7 @@ namespace DAB2_2
 
             foreach( var v in hent)
             {
-                Console.WriteLine($"{v.Zip}: {v.Street} {v.Number}");
+                Console.WriteLine($"{v.AddressId} -- {v.Zip}: {v.Street} {v.Number}");
             }
 
     

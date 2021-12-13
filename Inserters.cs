@@ -1,42 +1,73 @@
-﻿//using System;
-//using System.Linq;
-//using DAB2_2.Data;
-//using DAB2_2.Models;
-//using DAB2_3.Models;
+﻿using System;
+using System.Linq;
+using DAB2_2.Data;
+using DAB2_2.Models;
+using DAB2_3.Models;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
-//namespace DAB2_2
-//{
-//    public class Inserters
-//    {
-//        private readonly MyDbContext _context;
+namespace DAB2_2
+{
+    public class Inserters
+    {
+        private IMongoClient _client;
+        private IMongoDatabase _database;
 
-//        public Inserters(MyDbContext context)
-//        {
-//            _context = context;
-//        }
+        public Inserters()
+        {
+            _client = new MongoClient();
+            _database = _client.GetDatabase("Municipality");
+        }
 
-//        //Adds address to db. Returns Id of new address. Returns Id of address if it already exists.
-//        public int AddAddress(int zip, string street, int nmbr)
-//        {
-//            return AddAddress(new Address(zip, street, nmbr));
-//        }
 
-//        public int AddAddress(Address adr)
-//        {
-//            if (Queries.GetAddressId(_context, adr) == 0)
-//            {
-//                _context.Add(adr);
-//                _context.SaveChanges();
-//            }
+        //Adds address to db. Returns Id of new address. Returns Id of address if it already exists.
+        public int AddAddress(int addressId, int zip, string street, int nmbr)
+        {
+            return AddAddress(new Address(addressId,zip, street, nmbr));
+        }
 
-//            return Queries.GetAddressId(_context, adr);
-//        }
+        public int AddAddress(Address adr)
+        {
+            var col = _database.GetCollection<Address>("Addresses");
+
+            if (col.Find(x => x.AddressId == adr.AddressId).ToString() == null)
+            {
+                col.InsertOne(adr);
+
+                return 1;
+            }
+            Console.WriteLine()
+            var check = col.Find<Address>(x => x.AddressId == adr.AddressId).ToList();
+            foreach(var r in check)
+            {
+               
+                Console.WriteLine($"{r.AddressId} {r.ObjId} ");
+            }
+            Console.WriteLine("double i address");
+            return 0;
+        }
+
+        public int AddSociety(int cvr, string name, string activity, int addr, int? chairman = null)
+        {
+            return AddSociety(new Society(cvr, name, activity, addr, chairman));
+        }
+
+        public int AddSociety(Society s)
+        {
+            var col = _database.GetCollection<Society>("Societies");
+            col.InsertOne(s);
+           
+            return 1;
+        }
+    }
+}
+
 
 //        public int AddSociety(Society soc)
 //        {
 //            if (Queries.GetSocietyId(_context, soc) == 0)
 //            {
-//                if (soc.KeyholderId != null && !Queries.CheckKeyholder(_context, (int) soc.KeyholderId))
+//                if (soc.KeyholderId != null && !Queries.CheckKeyholder(_context, (int)soc.KeyholderId))
 //                    soc.KeyholderId = null;
 
 //                _context.Add(soc);
