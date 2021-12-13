@@ -17,44 +17,32 @@ namespace DAB2_2
 
             var col = _database.GetCollection<Address>("Addresses");
 
-            var addr = new Address(8, 8200, "der", 1);
-            _ins.AddAddress(addr);
+            var filter = Builders<Address>.Filter.Where(a=> true);
+            var loadCheck = col.Find(filter).Any();
 
-            var hent = col
-                        .Find(c => c.Zip == 8200)
-                        .ToListAsync()
-                        .Result;
+            _ins.AddAddress(8200, "her", 10);
 
-            foreach( var v in hent)
+            Console.WriteLine(Queries.NextAddress());
+           
+            if (!loadCheck)
             {
-                Console.WriteLine($"{v.AddressId} -- {v.Zip}: {v.Street} {v.Number}");
+                Console.WriteLine("Seeding database");
+                //var l = new Loader();
+                //l.loadAddresses();
+                //l.loadPersons();
+                //l.loadSocieties();
+                //l.loadKeyholders();
+                //l.loadRooms();
+                //l.loadBookings();
+                //l.loadKeys();
+               // l.loadCodes();
+            }
+            else
+            {
+                Console.WriteLine("Loadcheck passed");
             }
 
-    
 
-            //MyDbContext _context = new();
-            //var loadCheck =
-            //    _context.Addresses.Any();
-
-            //if (!loadCheck)
-            //{
-            //    Console.WriteLine("Seeding database");
-            //    var l = new Loader(_context);
-            //    l.loadAddresses();
-            //    l.loadPersons();
-            //    l.loadSocieties();
-            //    l.loadKeyholders();
-            //    l.loadRooms();
-            //    l.loadBookings();
-            //    l.loadKeys();
-            //    l.loadCodes();
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Loadcheck passed");
-            //}
-
-    
 
 
             // Add queries here.

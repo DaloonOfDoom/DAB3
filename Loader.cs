@@ -5,7 +5,6 @@
 //{
 //    internal class Loader
 //    {
-//        private readonly MyDbContext _context;
 //        private readonly Inserters _ins;
 
 //        private readonly string[] streetsList =
@@ -16,10 +15,9 @@
 //        };
 
 
-//        public Loader(MyDbContext context)
+//        public Loader()
 //        {
-//            _context = context;
-//            _ins = new Inserters(context);
+//            _ins = new Inserters();
 //        }
 
 //        public void loadAddresses()
@@ -80,28 +78,28 @@
 //            _ins.AddBooking(854339, Queries.GetSocietyId(_context, "Anonymous"),
 //                Queries.GetRoomId(_context, "Fælleren", Queries.GetAddressId(_context, 8200, "Gøteborg Alle", 14)),
 //                new DateTime(2021, 12, 24, 12, 0, 0));
-//        }
+//        } }
 
-//        public void loadCodes()
-//        {
-//            _ins.AddCode(1234,
-//                Queries.GetRoomId(_context, "430", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)));
-//            _ins.AddCode(4312,
-//                Queries.GetRoomId(_context, "430", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)));
-//            _ins.AddCode(6969,
-//                Queries.GetRoomId(_context, "Kælderen", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)));
-//            _ins.AddCode(1627,
-//                Queries.GetRoomId(_context, "Fælleren", Queries.GetAddressId(_context, 8200, "Gøteborg Alle", 14)));
-//        }
+////        public void loadCodes()
+////        {
+////            _ins.AddCode(1234,
+////                Queries.GetRoomId(_context, "430", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)));
+////            _ins.AddCode(4312,
+////                Queries.GetRoomId(_context, "430", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)));
+////            _ins.AddCode(6969,
+////                Queries.GetRoomId(_context, "Kælderen", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)));
+////            _ins.AddCode(1627,
+////                Queries.GetRoomId(_context, "Fælleren", Queries.GetAddressId(_context, 8200, "Gøteborg Alle", 14)));
+////        }
 
-//        public void loadKeys()
-//        {
-//            _ins.AddKey(
-//                Queries.GetRoomId(_context, "Kælderen", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)),
-//                _ins.AddAddress(8000, "Bødker Balles Gård", 17));
-//            _ins.AddKey(
-//                Queries.GetRoomId(_context, "Fælleren", Queries.GetAddressId(_context, 8200, "Gøteborg Alle", 14)),
-//                _ins.AddAddress(7400, "Hos Mathias's forældre", 404));
-//        }
-//    }
-//}
+////        public void loadKeys()
+////        {
+////            _ins.AddKey(
+////                Queries.GetRoomId(_context, "Kælderen", Queries.GetAddressId(_context, 8200, "Finlandsgade", 22)),
+////                _ins.AddAddress(8000, "Bødker Balles Gård", 17));
+////            _ins.AddKey(
+////                Queries.GetRoomId(_context, "Fælleren", Queries.GetAddressId(_context, 8200, "Gøteborg Alle", 14)),
+////                _ins.AddAddress(7400, "Hos Mathias's forældre", 404));
+////        }
+////    }
+////}
