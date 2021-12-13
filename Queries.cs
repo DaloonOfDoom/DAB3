@@ -5,6 +5,7 @@ using DAB2_2.Models;
 using DAB2_3.Models;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using System;
 using System.Linq;
 
 namespace DAB2_2
@@ -16,68 +17,116 @@ namespace DAB2_2
 
         public static bool CheckPerson(Person per)
         {
+            return CheckPerson(per.Cpr);
+        }
+        public static bool CheckPerson(int cpr)
+        {
             var col = _database.GetCollection<Person>("Persons");
-            var filter = Builders<Person>.Filter.Where(p => p.Cpr == per.Cpr);
+            var filter = Builders<Person>.Filter.Where(p => p.Cpr == cpr);
             var res = col.Find(filter).ToList<Person>();
             return res.Any();
         }
 
         public static bool CheckSociety(Society soc)
         {
+            return CheckSociety(soc.Cvr);
+        }
+        public static bool CheckSociety(int cvr)
+        {
             var col = _database.GetCollection<Society>("Societies");
-            var filter = Builders<Society>.Filter.Where(s => s.Cvr == soc.Cvr);
+            var filter = Builders<Society>.Filter.Where(s => s.Cvr == cvr);
             var res = col.Find(filter).ToList<Society>();
             return res.Any();
         }
 
         public static bool CheckAddress(Address addr)
         {
+            return CheckAddress(addr.Zip, addr.Street, addr.Number);
+        }
+        public static bool CheckAddress(int zip, string st, int nr)
+        {
             var col = _database.GetCollection<Address>("Addresses");
             var filter = Builders<Address>.Filter.
-                Where(a => a.Zip == addr.Zip
-                    && a.Street == addr.Street
-                    && a.Number == addr.Number);
+                Where(a => a.Zip == zip
+                    && a.Street == st
+                    && a.Number == nr);
             var res = col.Find(filter).ToList<Address>();
             return res.Any();
         }
 
         public static bool CheckRoom(Room room)
         {
+            return CheckRoom(room.RoomName, room.AddressId);
+        }
+        public static bool CheckRoom(string name, int addr)
+        {
             var col = _database.GetCollection<Room>("Rooms");
             var filter = Builders<Room>.Filter.
-                Where(r => r.RoomName == room.RoomName
-                && r.AddressId == room.AddressId);
+                Where(r => r.RoomName == name
+                && r.AddressId == addr);
             var res = col.Find(filter).ToList<Room>();
             return res.Any();
         }
 
         public static bool CheckCode(Room room, Code code)
         {
+            return CheckCode(room.RoomId, code.Pin);
+        }
+        public static bool CheckCode(int roomId, int pin)
+        {
             var col = _database.GetCollection<Room>("Rooms");
             var filter = Builders<Room>.Filter.
-                Where(r => r.Codes.Where(c => c.Pin == code.Pin).Any()) ;
+                Where(r => r.RoomId == roomId
+                && r.Codes.Where(c => c.Pin == pin).Any());
             var res = col.Find(filter).ToList<Room>();
             return res.Any();
         }
 
         public static bool CheckKey(Room room, Key key)
         {
+            return CheckKey(room.RoomId, key.KeyId);
+        }
+        public static bool CheckKey(int roomId, int keyId)
+        {
             var col = _database.GetCollection<Room>("Rooms");
             var filter = Builders<Room>.Filter.
-                Where(r => r.Key.KeyId == key.KeyId);
+                Where(r => r.RoomId == roomId
+                && r.Key.KeyId == keyId);
             var res = col.Find(filter).ToList<Room>();
             return res.Any();
         }
+
         public static bool CheckBooking(Booking book)
+        {
+            return CheckBooking(book.RoomId, book.TimeStart);
+        }
+
+        public static bool CheckBooking(int roomId, DateTime timeStart)
         {
             var col = _database.GetCollection<Booking>("Bookings");
             var filter = Builders<Booking>.Filter.
-                Where(b => b.BookingId == book.BookingId
-                && b.SocietyId == book.SocietyId
-                && b.TimeStart == b.TimeStart);
+                Where(b => b.RoomId == roomId
+                && b.TimeStart == timeStart);
             var res = col.Find(filter).ToList<Booking>();
             return res.Any();
         }
+
+        public static bool CheckCanBook(int cvr)
+        {
+            var col = _database.GetCollection<Society>("Societies");
+            var filter = Builders<Society>.Filter.
+                Where(s => s.KeyholderId != null);
+            var res = col.Find(filter).ToList<Society>();
+            return res.Any();
+
+        }
+        public static bool CheckCanBook(Booking book)
+        {
+            return CheckCanBook(book.SocietyId);
+        }
+
+
+        
     }
 }
 

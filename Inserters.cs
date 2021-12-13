@@ -152,8 +152,9 @@ namespace DAB2_2
         //Returns 1 if booking is successful
         public int AddBooking(Booking book)
         {
+
             var col = _database.GetCollection<Booking>("Bookings");
-            if (!Queries.CheckBookings(book))
+            if (!Queries.CheckBooking(book))
             {
                 col.InsertOne(book);
                 return 1;
