@@ -53,7 +53,7 @@ namespace DAB2_2
             Queries.GetSocietiesByActivity();
                 Console.WriteLine("\r\n Printing Bookings\r\n");
             Queries.GetAllBookings();
-                Console.WriteLine("\r\n");
+                Console.WriteLine("\r\n Printing bookings for Person with CPR:459431\r\n");
                Queries.GetAllPersonalBookings(459431);
             //}
         }
