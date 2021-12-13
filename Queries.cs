@@ -39,6 +39,18 @@ namespace DAB2_2
             return res.Any();
         }
 
+        public static int GetSocietyId(Society soc)
+        {
+            return GetSocietyId(soc.Name);
+        }
+        public static int GetSocietyId(string name)
+        {
+            var col = _database.GetCollection<Society>("Societies");
+            var filter = Builders<Society>.Filter.Where(s => s.Name == name);
+            var res = col.Find(filter).FirstOrDefault<Society>();
+            return res.Cvr;
+        }
+
         public static bool CheckAddress(Address addr)
         {
             return CheckAddress(addr.Zip, addr.Street, addr.Number);
@@ -54,6 +66,18 @@ namespace DAB2_2
             return res.Any();
         }
 
+        public static int GetAddressId(Address addr)
+        {
+            return GetAddressId(addr.Zip, addr.Street, addr.Number);
+        }
+        public static int GetAddressId(int zip, string street, int number)
+        {
+            var col = _database.GetCollection<Address>("Addresses");
+            var filter = Builders<Address>.Filter.Where(a => a.Zip == zip && a.Street == street && a.Number == number);
+            var res = col.Find(filter).FirstOrDefault<Address>();
+            return res.AddressId;
+        }
+
         public static bool CheckRoom(Room room)
         {
             return CheckRoom(room.RoomName, room.AddressId);
@@ -66,6 +90,18 @@ namespace DAB2_2
                 && r.AddressId == addr);
             var res = col.Find(filter).ToList<Room>();
             return res.Any();
+        }
+
+        public static int GetRoomId(Room room)
+        {
+            return GetRoomId(room.RoomName);
+        }
+        public static int GetRoomId(string roomName)
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.Where(r => r.RoomName == roomName);
+            var res = col.Find(filter).FirstOrDefault<Room>();
+            return res.RoomId;
         }
 
         public static bool CheckCode(Room room, Code code)
@@ -126,7 +162,7 @@ namespace DAB2_2
         }
 
 
-        
+
     }
 }
 
