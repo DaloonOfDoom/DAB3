@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using DAB2_2.Data;
+//using DAB2_2.Data;
 using DAB2_2.Models;
 using DAB2_3.Models;
 using MongoDB.Bson;
@@ -137,11 +137,11 @@ namespace DAB2_2
 
         //public int AddCode(int pin, int roomId)
         //{
-        //    if (!Queries.CheckCode(_context, pin, roomId)
-        //        && Queries.CheckRoom(_context, roomId))
+        //    if (!Queries.CheckCode(, pin, roomId)
+        //        && Queries.CheckRoom(, roomId))
         //    {
-        //        _context.Add(new Code(pin, roomId));
-        //        _context.SaveChanges();
+        //        .Add(new Code(pin, roomId));
+        //        .SaveChanges();
         //        return 1;
         //    }
 
@@ -150,16 +150,16 @@ namespace DAB2_2
 
         //        public int AddKey(int roomId, int addressId)
         //        {
-        //            if (Queries.GetKeyId(_context, roomId) == 0
-        //                && Queries.CheckRoom(_context, roomId)
-        //                && Queries.CheckAddress(_context, addressId))
+        //            if (Queries.GetKeyId(, roomId) == 0
+        //                && Queries.CheckRoom(, roomId)
+        //                && Queries.CheckAddress(, addressId))
 
         //            {
-        //                _context.Add(new Key(roomId, addressId));
-        //                _context.SaveChanges();
+        //                .Add(new Key(roomId, addressId));
+        //                .SaveChanges();
         //            }
 
-        //            return Queries.GetKeyId(_context, roomId);
+        //            return Queries.GetKeyId(, roomId);
         //        }
     }
 }

@@ -32,6 +32,5 @@ namespace DAB2_2.Models
         public int? Phonenumber { get; set; }
 
         public int AddressId { get; set; }
-        public Address Address { get; set; }
     }
 }

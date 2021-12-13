@@ -33,10 +33,5 @@ namespace DAB2_2.Models
         public int? ChairmanId { get; set; }
         public int? KeyholderId { get; set; }
 
-        public Address Address { get; set; }
-        public Person? Chairman { get; set; }
-        public Person? Keyholder { get; set; }
-
-        public List<Booking> Bookings { get; set; }
     }
 }

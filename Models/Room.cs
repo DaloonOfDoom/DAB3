@@ -8,7 +8,7 @@ namespace DAB2_2.Models
 {
     public class Room
     {
-        public Room(int roomId, string roomName, int maximumOccupancy, int openingHour, int closingHour, int addressId, string? objId = null)
+        public Room(int roomId, string roomName, int maximumOccupancy, int openingHour, int closingHour, int addressId, int[]? codes = null, int? keyAddressId = null, string? objId = null)
         {
             ObjId = objId;
             RoomId = roomId;
@@ -17,6 +17,8 @@ namespace DAB2_2.Models
             OpeningHour = openingHour;
             ClosingHour = closingHour;
             AddressId = addressId;
+            KeyAddressId = keyAddressId;
+            Codes = codes;
         }
 
         [BsonId]
@@ -32,10 +34,8 @@ namespace DAB2_2.Models
         public int ClosingHour { get; set; }
 
         public int AddressId { get; set; }
+        public int? KeyAddressId { get; set; }
+        public int[]? Codes { get; set; }
 
-        public Address Address { get; set; }
-        public List<Booking> BookingList { get; set; }
-        public List<Code>? Codes { get; set; }
-        public Key? Key { get; set; }
     }
 }
