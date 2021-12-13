@@ -29,7 +29,8 @@ namespace DAB2_2
         public int AddAddress(Address adr)
         {
             var col = _database.GetCollection<Address>("Addresses");
-            var filter = Builders<Address>.Filter.Where(x => x.AddressId == adr.AddressId);
+            var filter = Builders<Address>.Filter.Where(x => x.AddressId == adr.AddressId
+                                                            );
             var res = col.Find(filter).ToList<Address>();
             if (!res.Any())
             {
