@@ -1,12 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DAB2_2.Models
 {
     public class Person
     {
-        public Person(int cpr, string firstName, string lastName, int addressId, int? license = null,
+        public Person(string objId, int cpr, string firstName, string lastName, int addressId, int? license = null,
             int? phonenumber = null)
         {
+            ObjId = objId;
             Cpr = cpr;
             FirstName = firstName;
             LastName = lastName;
@@ -14,6 +17,10 @@ namespace DAB2_2.Models
             License = license;
             Phonenumber = phonenumber;
         }
+
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string ObjId { get; set; }
 
         public int Cpr { get; set; }
 
