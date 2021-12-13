@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DAB2_2.Models
 {
@@ -10,8 +12,10 @@ namespace DAB2_2.Models
             Street = street;
             Number = number;
         }
-
-        public int AddressId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string AddressId { get; set; }
+        
         public int Zip { get; set; }
 
         [MaxLength(64)] public string Street { get; set; }
