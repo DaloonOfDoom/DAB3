@@ -1,19 +1,23 @@
 ﻿using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DAB2_2.Models
 {
     public class Booking
     {
-        public Booking(int societyId, int roomId, DateTime timeStart)
+        public Booking(string societyId, string roomId, DateTime timeStart)
         {
             SocietyId = societyId;
             RoomId = roomId;
             TimeStart = timeStart;
         }
 
-        public int RoomId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string RoomId { get; set; }
 
-        public int SocietyId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string SocietyId { get; set; }
 
         public DateTime TimeStart { get; set; }
 

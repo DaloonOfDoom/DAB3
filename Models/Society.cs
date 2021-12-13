@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DAB2_2.Models
 {
     public class Society
     {
-        public Society(int cvr, string name, string activity, int addressId, int? chairmanId = null,
-            int? keyholderId = null)
+        public Society(string cvr, string name, string activity, string addressId, string? chairmanId = null,
+            string? keyholderId = null)
         {
             Cvr = cvr;
             Name = name;
@@ -16,16 +18,20 @@ namespace DAB2_2.Models
             KeyholderId = keyholderId;
         }
 
-        public int Cvr { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Cvr { get; set; }
 
         [MaxLength(64)] public string Name { get; set; }
 
         [MaxLength(64)] public string Activity { get; set; }
 
-        public int AddressId { get; set; }
-        public int? ChairmanId { get; set; }
-
-        public int? KeyholderId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string AddressId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? ChairmanId { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? KeyholderId { get; set; }
 
         public Address Address { get; set; }
         public Person? Chairman { get; set; }
