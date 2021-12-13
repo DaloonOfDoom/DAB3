@@ -7,8 +7,8 @@ namespace DAB2_2.Models
 {
     public class Society
     {
-        public Society(string objId, int cvr, string name, string activity, int addressId, int? chairmanId = null,
-            int? keyholderId = null)
+        public Society(int cvr, string name, string activity, int addressId, int? chairmanId = null,
+            int? keyholderId = null, string? objId = null)
         {
             ObjId = objId;
             Cvr = cvr;
@@ -21,7 +21,7 @@ namespace DAB2_2.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ObjId { get; set; }
+        public string? ObjId { get; set; }
 
         public int Cvr { get; set; }
 

@@ -8,7 +8,7 @@ namespace DAB2_2.Models
 {
     public class Room
     {
-        public Room(string objId, int roomId, string roomName, int maximumOccupancy, int openingHour, int closingHour, int addressId)
+        public Room(int roomId, string roomName, int maximumOccupancy, int openingHour, int closingHour, int addressId, string? objId = null)
         {
             ObjId = objId;
             RoomId = roomId;
@@ -21,7 +21,7 @@ namespace DAB2_2.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ObjId { get; set; }
+        public string? ObjId { get; set; }
 
         public int RoomId { get; set; }
 

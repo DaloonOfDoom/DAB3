@@ -6,7 +6,7 @@ namespace DAB2_3.Models
 {
     public class Key
     {
-        public Key(string objId, int keyId, int roomId, int addressId)
+        public Key(int keyId, int roomId, int addressId, string? objId = null)
         {
             ObjId = objId;
             KeyId = keyId;
@@ -16,7 +16,7 @@ namespace DAB2_3.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ObjId { get; set; }
+        public string? ObjId { get; set; }
         public int KeyId { get; set; }
         public int RoomId { get; set; }
         public int AddressId { get; set; }

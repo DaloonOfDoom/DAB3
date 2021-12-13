@@ -6,8 +6,8 @@ namespace DAB2_2.Models
 {
     public class Person
     {
-        public Person(string objId, int cpr, string firstName, string lastName, int addressId, int? license = null,
-            int? phonenumber = null)
+        public Person(int cpr, string firstName, string lastName, int addressId, int? license = null,
+            int? phonenumber = null, string? objId = null)
         {
             ObjId = objId;
             Cpr = cpr;
@@ -20,7 +20,7 @@ namespace DAB2_2.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ObjId { get; set; }
+        public string? ObjId { get; set; }
 
         public int Cpr { get; set; }
 

@@ -6,7 +6,7 @@ namespace DAB2_2.Models
 {
     public class Booking
     {
-        public Booking(string objId, int bookingId, int societyId, int roomId, DateTime timeStart)
+        public Booking(int bookingId, int societyId, int roomId, DateTime timeStart, string? objId = null)
         {
             ObjId = objId;
             BookingId = bookingId;
@@ -16,7 +16,7 @@ namespace DAB2_2.Models
         }
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string ObjId { get; set; }
+        public string? ObjId { get; set; }
         public int BookingId { get; set; }
         public int RoomId { get; set; }
 
