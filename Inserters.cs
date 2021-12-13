@@ -2,7 +2,6 @@
 using System.Linq;
 //using DAB2_2.Data;
 using DAB2_2.Models;
-using DAB2_3.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -116,20 +115,30 @@ namespace DAB2_2
             return AddRoom(new Room(0, name, max, opening, closing, addr));
         }
 
-        public int AddBooking(int societyId, int roomId, DateTime start)
+        public int AddBooking(int roomId, int societyId, DateTime start)
         {
-            return AddBooking(new Booking(0, societyId, roomId, start));
+           
+            return AddBooking(roomId, new Booking(0,societyId,start));
         }
 
         //Returns 1 if booking is successful
-        public int AddBooking(Booking book)
+        public int AddBooking(int roomId, Booking book)
         {
 
-            var col = _database.GetCollection<Booking>("Bookings");
-            if (!Queries.CheckBooking(book))
+            
+            if (!Queries.CheckBooking(roomId, book.TimeStart) && Queries.CheckCanBook(book))
             {
-                book.BookingId = Queries.NextBooking();
-                col.InsertOne(book);
+                var s_col = _database.GetCollection<Society>("Societies");
+                var s_filter = Builders<Society>.Filter.Eq("Cvr", book.SocietyId);
+                var s = s_col.Find(s_filter).First();
+
+                book.KeyholderId = s.KeyholderId ?? 0; // er aldrig 0 her
+
+                var col = _database.GetCollection<Room>("Rooms");
+                var filter = Builders<Room>.Filter.Eq("RoomId", roomId);
+                var update = Builders<Room>.Update.Push<Booking>(r => r.Bookings, book);
+                col.UpdateOne(filter, update);
+                
                 return 1;
             }
             return 0;
@@ -143,7 +152,7 @@ namespace DAB2_2
                 {
                     var col = _database.GetCollection<Room>("Rooms");
                     var filter = Builders<Room>.Filter.Eq("RoomId", roomId);
-                    var update = Builders<Room>.Update.Set("Key", addressId);
+                    var update = Builders<Room>.Update.Set("KeyAddressId", addressId);
                     col.UpdateOne(filter, update);
                     return 1;
                 }
@@ -151,13 +160,13 @@ namespace DAB2_2
             return 0;
         }
 
-        public int AddCode(int roomId, int pin)
+        public int AddCode(int pin, int roomId)
         {
             if (!Queries.CheckCode(roomId, pin))
             {
                 var col = _database.GetCollection<Room>("Rooms");
                 var filter = Builders<Room>.Filter.Eq("RoomId", roomId);
-                var update = Builders<Room>.Update.Set(r => r.Codes[r.Codes.Length], pin);
+                var update = Builders<Room>.Update.Push<int>(r => r.Codes, pin);
                 col.UpdateOne(filter, update);
                 return 1;
             }

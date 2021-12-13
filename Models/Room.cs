@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DAB2_3.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -8,7 +8,7 @@ namespace DAB2_2.Models
 {
     public class Room
     {
-        public Room(int roomId, string roomName, int maximumOccupancy, int openingHour, int closingHour, int addressId, int[]? codes = null, int? keyAddressId = null, string? objId = null)
+        public Room(int roomId, string roomName, int maximumOccupancy, int openingHour, int closingHour, int addressId, Booking[]? bookings = null, int[]? codes = null, int? keyAddressId = null, string? objId = null)
         {
             ObjId = objId;
             RoomId = roomId;
@@ -18,7 +18,10 @@ namespace DAB2_2.Models
             ClosingHour = closingHour;
             AddressId = addressId;
             KeyAddressId = keyAddressId;
-            Codes = codes;
+            Codes = codes == null ? Array.Empty<int>() : codes;
+            Bookings = bookings == null ? Array.Empty<Booking>() : bookings;
+
+
         }
 
         [BsonId]
@@ -36,6 +39,7 @@ namespace DAB2_2.Models
         public int AddressId { get; set; }
         public int? KeyAddressId { get; set; }
         public int[]? Codes { get; set; }
+        public Booking[]? Bookings { get; set; }
 
     }
 }

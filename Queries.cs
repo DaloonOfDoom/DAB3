@@ -2,7 +2,6 @@
 //using System.Linq;
 
 using DAB2_2.Models;
-using DAB2_3.Models;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using System;
@@ -165,18 +164,14 @@ namespace DAB2_2
             return res.Any();
         }
 
-        public static bool CheckBooking(Booking book)
-        {
-            return CheckBooking(book.RoomId, book.TimeStart);
-        }
 
         public static bool CheckBooking(int roomId, DateTime timeStart)
         {
-            var col = _database.GetCollection<Booking>("Bookings");
-            var filter = Builders<Booking>.Filter.
+            var col = _database.GetCollection<Room>("Bookings");
+            var filter = Builders<Room>.Filter.
                 Where(b => b.RoomId == roomId
-                && b.TimeStart == timeStart);
-            var res = col.Find(filter).ToList<Booking>();
+                && b.Bookings.Any(b => b.TimeStart == timeStart));
+            var res = col.Find(filter).ToList<Room>();
             return res.Any();
         }
 
@@ -241,7 +236,90 @@ namespace DAB2_2
                 }
 
             }
+         }
+
+        public static void GetAllBookings()
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.Where(r => r.Bookings.Count() >= 1);
+            var res = col.Find(filter).ToEnumerable();
+
+            foreach(var r in res)
+            {
+                var a_col = _database.GetCollection<Address>("Addresses");
+                    var a_filter = Builders<Address>.Filter.Where(a => a.AddressId == r.AddressId);
+                    var a = a_col.Find(a_filter).First();
+                Console.WriteLine($"Room: {r.RoomName} at {a.Street} {a.Number} - {a.Zip} has been booked {r.Bookings.Count()} times:");
+                foreach(var b in r.Bookings)
+                {
+                    var s_col = _database.GetCollection<Society>("Societies");
+                    var s = s_col.Find(s => s.Cvr == b.SocietyId).First();
+
+                    var c_col = _database.GetCollection<Person>("Persons");
+                    var c_filter = Builders<Person>.Filter.Where(p => p.Cpr == s.ChairmanId);
+                    var c = c_col.Find(c_filter).FirstOrDefault();
+
+                    if (c!= null)
+                    {
+                        Console.WriteLine($"{b.TimeStart.ToString("d")} by {s.Name} with chairman {c.FirstName} {c.LastName}");
                     }
+                    else Console.WriteLine($"{b.TimeStart.ToString("d")} by {s.Name}");
+
+
+                }
+
+
+                
+
+            }
+        }
+
+        public static void GetAllPersonalBookings(int cpr)
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.Where(r => r.Bookings.
+            Any(b=>b.KeyholderId == cpr
+            && b.TimeStart >= DateTime.Now));
+            var res = col.Find(filter).ToEnumerable();
+            foreach(var r in res)
+            {
+                var a_col = _database.GetCollection<Address>("Addresses");
+                var a_filter = Builders<Address>.Filter.Where(a => a.AddressId == r.AddressId);
+                var a = a_col.Find(a_filter).First();
+
+                Console.WriteLine($"Room: {r.RoomName} at {a.Street} {a.Number} - {a.Zip} can by accessed by:");
+                if(r.KeyAddressId != null)
+                {
+                    var k_col = _database.GetCollection<Address>("Addresses");
+                    var k_filter = Builders<Address>.Filter.Where(a => a.AddressId == r.KeyAddressId);
+                    var k = k_col.Find(k_filter).First();
+                    Console.WriteLine();
+                    Console.WriteLine($"Key: can be accessed at {k.Street} {k.Number} - {k.Zip}");
+                }
+
+                if(r.Codes.Count() > 0)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Code:");
+
+                    foreach(var c in r.Codes)
+                    {
+                        Console.WriteLine($"PIN: {c}");
+                    }
+                }
+
+                Console.WriteLine("");
+                Console.WriteLine("Is booked on the following days:");
+
+                foreach(var b in r.Bookings)
+                {
+                    Console.WriteLine($"{b.TimeStart.ToString("d")}");
+                }
+                Console.WriteLine("");
+                Console.WriteLine("-------------------------------------------------");
+                Console.WriteLine("");
+            }
+        }
         //          
     }
 }

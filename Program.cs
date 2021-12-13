@@ -16,8 +16,8 @@ namespace DAB2_2
             var col = _database.GetCollection<Address>("Addresses");
 
             var filter = Builders<Address>.Filter.Where(a=> true);
-            //var loadCheck = col.Find(filter).Any();
-            var loadCheck = false;
+            var loadCheck = col.Find(filter).Any();
+
 
             if (!loadCheck)
             {
@@ -29,8 +29,8 @@ namespace DAB2_2
                 l.loadKeyholders();
                 l.loadRooms();
                 l.loadBookings();
-                //l.loadKeys();
-                // l.loadCodes();
+                l.loadKeys();
+                l.loadCodes();
             }
             else
             {
@@ -51,10 +51,10 @@ namespace DAB2_2
            Queries.GetAllRooms();
            Console.WriteLine("\r\n Printing Activities\r\n");
             Queries.GetSocietiesByActivity();
-            //    Console.WriteLine("\r\n Printing Bookings\r\n");
-            //    Queries.GetAllBookings();
-            //    Console.WriteLine("\r\n");
-            //    Queries.GetBookingsBySociety(, Queries.GetSocietyId(, "Norm's funhouse"));
+                Console.WriteLine("\r\n Printing Bookings\r\n");
+            Queries.GetAllBookings();
+                Console.WriteLine("\r\n");
+               Queries.GetAllPersonalBookings(459431);
             //}
         }
     }
