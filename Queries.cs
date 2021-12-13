@@ -95,7 +95,9 @@ namespace DAB2_2
         public static int GetAddressId(int zip, string street, int number)
         {
             var col = _database.GetCollection<Address>("Addresses");
-            var filter = Builders<Address>.Filter.Where(a => a.Zip == zip && a.Street == street && a.Number == number);
+            var filter = Builders<Address>.Filter.Where(a => a.Zip == zip
+                && a.Street == street
+                && a.Number == number);
             var res = col.Find(filter).FirstOrDefault<Address>();
             return res.AddressId;
         }
@@ -116,12 +118,13 @@ namespace DAB2_2
 
         public static int GetRoomId(Room room)
         {
-            return GetRoomId(room.RoomName);
+            return GetRoomId(room.RoomName, room.AddressId);
         }
-        public static int GetRoomId(string roomName)
+        public static int GetRoomId(string roomName, int addressId)
         {
             var col = _database.GetCollection<Room>("Rooms");
-            var filter = Builders<Room>.Filter.Where(r => r.RoomName == roomName);
+            var filter = Builders<Room>.Filter.Where(r => r.RoomName == roomName
+                && r.AddressId == addressId);
             var res = col.Find(filter).FirstOrDefault<Room>();
             return res.RoomId;
         }
