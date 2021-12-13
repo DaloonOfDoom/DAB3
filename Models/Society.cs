@@ -7,9 +7,10 @@ namespace DAB2_2.Models
 {
     public class Society
     {
-        public Society(string cvr, string name, string activity, string addressId, string? chairmanId = null,
-            string? keyholderId = null)
+        public Society(string objId, int cvr, string name, string activity, int addressId, int? chairmanId = null,
+            int? keyholderId = null)
         {
+            ObjId = objId;
             Cvr = cvr;
             Name = name;
             Activity = activity;
@@ -20,18 +21,17 @@ namespace DAB2_2.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Cvr { get; set; }
+        public string ObjId { get; set; }
+
+        public int Cvr { get; set; }
 
         [MaxLength(64)] public string Name { get; set; }
 
         [MaxLength(64)] public string Activity { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string AddressId { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? ChairmanId { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? KeyholderId { get; set; }
+        public int AddressId { get; set; }
+        public int? ChairmanId { get; set; }
+        public int? KeyholderId { get; set; }
 
         public Address Address { get; set; }
         public Person? Chairman { get; set; }

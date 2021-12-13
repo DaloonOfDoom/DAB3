@@ -6,18 +6,21 @@ namespace DAB2_2.Models
 {
     public class Booking
     {
-        public Booking(string societyId, string roomId, DateTime timeStart)
+        public Booking(string objId, int bookingId, int societyId, int roomId, DateTime timeStart)
         {
+            ObjId = objId;
+            BookingId = bookingId;
             SocietyId = societyId;
             RoomId = roomId;
             TimeStart = timeStart;
         }
-
+        [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string RoomId { get; set; }
+        public string ObjId { get; set; }
+        public int BookingId { get; set; }
+        public int RoomId { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string SocietyId { get; set; }
+        public int SocietyId { get; set; }
 
         public DateTime TimeStart { get; set; }
 

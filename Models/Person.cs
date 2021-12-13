@@ -6,9 +6,10 @@ namespace DAB2_2.Models
 {
     public class Person
     {
-        public Person(string cpr, string firstName, string lastName, string addressId, int? license = null,
+        public Person(string objId, int cpr, string firstName, string lastName, int addressId, int? license = null,
             int? phonenumber = null)
         {
+            ObjId = objId;
             Cpr = cpr;
             FirstName = firstName;
             LastName = lastName;
@@ -19,7 +20,9 @@ namespace DAB2_2.Models
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Cpr { get; set; }
+        public string ObjId { get; set; }
+
+        public int Cpr { get; set; }
 
         [MaxLength(64)] public string FirstName { get; set; }
 
@@ -28,8 +31,7 @@ namespace DAB2_2.Models
         public int? License { get; set; }
         public int? Phonenumber { get; set; }
 
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string AddressId { get; set; }
+        public int AddressId { get; set; }
         public Address Address { get; set; }
     }
 }

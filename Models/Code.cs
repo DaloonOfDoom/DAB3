@@ -6,15 +6,20 @@ namespace DAB2_3.Models
 {
     public class Code
     {
-        public Code(int pin, string roomId)
+        public Code(string objId, int codeId, int pin, int roomId)
         {
+            ObjId = objId;
+            CodeId = codeId;
             Pin = pin;
             RoomId = roomId;
         }
 
-        public int Pin { get; set; }
+        [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string RoomId { get; set; }
+        public string ObjId { get; set; }
+        public int CodeId { get; set; }
+        public int Pin { get; set; }
+        public int RoomId { get; set; }
 
         public Room Room { get; set; }
     }

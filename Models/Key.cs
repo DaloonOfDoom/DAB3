@@ -6,19 +6,20 @@ namespace DAB2_3.Models
 {
     public class Key
     {
-        public Key(string roomId, string addressId)
+        public Key(string objId, int keyId, int roomId, int addressId)
         {
+            ObjId = objId;
+            KeyId = keyId;
             RoomId = roomId;
             AddressId = addressId;
         }
 
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string KeyId { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string RoomId { get; set; }
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string AddressId { get; set; }
+        public string ObjId { get; set; }
+        public int KeyId { get; set; }
+        public int RoomId { get; set; }
+        public int AddressId { get; set; }
 
         public Room Room { get; set; }
         public Address Address { get; set; }
