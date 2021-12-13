@@ -1,21 +1,86 @@
 ﻿//using System;
 //using System.Linq;
-//using DAB2_2.Data;
-//using DAB2_2.Models;
-//using Microsoft.EntityFrameworkCore;
+using DAB2_2.Data;
+using DAB2_2.Models;
+using DAB2_3.Models;
+using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
+using System.Linq;
 
-//namespace DAB2_2
-//{
-//    public class Queries
-//    {
-//        private MyDbContext _context;
+namespace DAB2_2
+{
+    public class Queries
+    {
+        static private IMongoClient _client = new MongoClient();
+        static private IMongoDatabase _database = _client.GetDatabase("Municipality");
 
-//        public Queries(MyDbContext context)
-//        {
-//            _context = context;
-//        }
+        public static bool CheckPerson(Person per)
+        {
+            var col = _database.GetCollection<Person>("Persons");
+            var filter = Builders<Person>.Filter.Where(p => p.Cpr == per.Cpr);
+            var res = col.Find(filter).ToList<Person>();
+            return res.Any();
+        }
 
-     
+        public static bool CheckSociety(Society soc)
+        {
+            var col = _database.GetCollection<Society>("Societies");
+            var filter = Builders<Society>.Filter.Where(s => s.Cvr == soc.Cvr);
+            var res = col.Find(filter).ToList<Society>();
+            return res.Any();
+        }
+
+        public static bool CheckAddress(Address addr)
+        {
+            var col = _database.GetCollection<Address>("Addresses");
+            var filter = Builders<Address>.Filter.
+                Where(a => a.Zip == addr.Zip
+                    && a.Street == addr.Street
+                    && a.Number == addr.Number);
+            var res = col.Find(filter).ToList<Address>();
+            return res.Any();
+        }
+
+        public static bool CheckRoom(Room room)
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.
+                Where(r => r.RoomName == room.RoomName
+                && r.AddressId == room.AddressId);
+            var res = col.Find(filter).ToList<Room>();
+            return res.Any();
+        }
+
+        public static bool CheckCode(Room room, Code code)
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.
+                Where(r => r.Codes.Where(c => c.Pin == code.Pin).Any()) ;
+            var res = col.Find(filter).ToList<Room>();
+            return res.Any();
+        }
+
+        public static bool CheckKey(Room room, Key key)
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.
+                Where(r => r.Key.KeyId == key.KeyId);
+            var res = col.Find(filter).ToList<Room>();
+            return res.Any();
+        }
+        public static bool CheckBooking(Booking book)
+        {
+            var col = _database.GetCollection<Booking>("Bookings");
+            var filter = Builders<Booking>.Filter.
+                Where(b => b.BookingId == book.BookingId
+                && b.SocietyId == book.SocietyId
+                && b.TimeStart == b.TimeStart);
+            var res = col.Find(filter).ToList<Booking>();
+            return res.Any();
+        }
+    }
+}
+
 
 //        ////Returns Id og Address. Returns 0 if not found.
 //        //public static int GetAddressId(MyDbContext context, int zip, string street, int nmbr)
