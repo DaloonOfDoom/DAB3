@@ -23,13 +23,14 @@ namespace DAB2_2
         //Adds address to db. Returns Id of new address. Returns Id of address if it already exists.
         public int AddAddress(int zip, string street, int nmbr)
         {
-            return AddAddress(new Address(0,zip, street, nmbr));
+            return AddAddress(new Address(0, zip, street, nmbr));
         }
 
         public int AddAddress(Address adr)
         {
             var col = _database.GetCollection<Address>("Addresses");
-                if(!Queries.CheckAddress(adr)) {
+            if (!Queries.CheckAddress(adr))
+            {
 
                 adr.AddressId = Queries.NextAddress();
                 col.InsertOne(adr);
@@ -132,6 +133,27 @@ namespace DAB2_2
                 return 1;
             }
             return 0;
+        }
+
+        public int AddKey(int roomId, int addressId)
+        {
+            if (Queries.CheckAddress(addressId))
+            {
+                if (!Queries.CheckKey(roomId))
+                {
+                    var col = _database.GetCollection<Room>("Rooms");
+                    var filter = Builders<Room>.Filter.Eq("RoomId", roomId);
+                    var update = Builders<Room>.Update.Set("Key", addressId);
+                    col.UpdateOne(filter, update);
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        public int AddCode()
+        {
+
         }
 
 

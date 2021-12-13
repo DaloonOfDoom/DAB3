@@ -88,6 +88,14 @@ namespace DAB2_2
             return res.Any();
         }
 
+        public static bool CheckAddress(int addressId)
+        {
+            var col = _database.GetCollection<Address>("Addresses");
+            var filter = Builders<Address>.Filter.Where(a => a.AddressId == addressId);
+            var res = col.Find(filter).ToList<Address>();
+            return res.Any();
+        }
+
         public static int GetAddressId(Address addr)
         {
             return GetAddressId(addr.Zip, addr.Street, addr.Number);
