@@ -15,6 +15,28 @@ namespace DAB2_2
         static private IMongoClient _client = new MongoClient();
         static private IMongoDatabase _database = _client.GetDatabase("Municipality");
 
+        public static int NextAddress()
+        {
+            var col = _database.GetCollection<Address>("Addresses");
+            var filter = Builders<Address>.Filter.Where(a => true);
+            var res = ((int)col.CountDocuments(filter));
+            return res;
+        }
+        public static int NextRoom()
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var filter = Builders<Room>.Filter.Where(a => true);
+            var res = ((int)col.CountDocuments(filter));
+            return res;
+        }
+        public static int NextBooking()
+        {
+            var col = _database.GetCollection<Booking>("Bookings");
+            var filter = Builders<Booking>.Filter.Where(a => true);
+            var res = ((int)col.CountDocuments(filter));
+            return res;
+        }
+
         public static bool CheckPerson(Person per)
         {
             return CheckPerson(per.Cpr);

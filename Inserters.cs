@@ -21,19 +21,17 @@ namespace DAB2_2
 
 
         //Adds address to db. Returns Id of new address. Returns Id of address if it already exists.
-        public int AddAddress(int addressId, int zip, string street, int nmbr)
+        public int AddAddress(int zip, string street, int nmbr)
         {
-            return AddAddress(new Address(addressId, zip, street, nmbr));
+            return AddAddress(new Address(0,zip, street, nmbr));
         }
 
         public int AddAddress(Address adr)
         {
             var col = _database.GetCollection<Address>("Addresses");
-            var filter = Builders<Address>.Filter.Where(x => x.AddressId == adr.AddressId
-                                                            );
-            var res = col.Find(filter).ToList<Address>();
-            if (!res.Any())
-            {
+                if(!Queries.CheckAddress(adr)) {
+
+                adr.AddressId = Queries.NextAddress();
                 col.InsertOne(adr);
 
                 return 1;
@@ -63,49 +61,21 @@ namespace DAB2_2
 
         public int AddKeyholder(int cvr, Person person)
         {
-            if (Queries.CheckSociety(cvr) && !Queries.CheckCanBook(cvr))
-            {
-                var col = _database.GetCollection<Society>("Societies");
-                if (!Queries.CheckPerson(person))
-                {
-
-                }
-            }
-
-            var res = _context.Persons.SingleOrDefault(p =>
-                p.Cpr == person.Cpr);
-            if (res == null)
-            {
-                AddPerson(person);
-            }
-            else
-            {
-                res.License = person.License;
-                res.Phonenumber = person.Phonenumber;
-                _context.SaveChanges();
-            }
-
-            var soc = _context.Societies.SingleOrDefault(s =>
-                s.Cvr == cvr);
-            soc.KeyholderId = person.Cpr;
-            _context.SaveChanges();
-            return 1;
+            return AddKeyholder(cvr, person.Cpr);
         }
 
-        public int AddKeyholder(int cvr, int cpr, string firstName, string lastName, int addr, int? license = null,
-            int? phonenumber = null)
-        {
-            return AddKeyholder(cvr, new Person(cpr, firstName, lastName, addr, license, phonenumber));
-        }
 
         public int AddKeyholder(int cvr, int cpr)
         {
-            if (!Queries.CheckSociety(_context, cvr) || !Queries.CheckKeyholder(_context, cpr)) return 0;
-            var soc = _context.Societies.SingleOrDefault(s =>
-                s.Cvr == cvr);
-            soc.KeyholderId = cpr;
-            _context.SaveChanges();
-            return 1;
+            if (Queries.CheckSociety(cvr) && !Queries.CheckCanBook(cvr) && Queries.CheckPerson(cpr))
+            {
+                var col = _database.GetCollection<Society>("Societies");
+                var filter = Builders<Society>.Filter.Eq("Cvr", cvr);
+                var update = Builders<Society>.Update.Set("KeyholderId", cpr);
+                col.UpdateOne(filter, update);
+                return 1;
+            }
+            return 0;
         }
 
         public int AddPerson(Person per)
@@ -132,6 +102,7 @@ namespace DAB2_2
             var col = _database.GetCollection<Room>("Rooms");
             if (!Queries.CheckRoom(room))
             {
+                room.RoomId = Queries.NextRoom();
                 col.InsertOne(room);
                 return 1;
             }
@@ -139,14 +110,14 @@ namespace DAB2_2
             return 0;
         }
 
-        public int AddRoom(int roomId, string name, int max, int opening, int closing, int addr)
+        public int AddRoom(string name, int max, int opening, int closing, int addr)
         {
-            return AddRoom(new Room(roomId, name, max, opening, closing, addr));
+            return AddRoom(new Room(0, name, max, opening, closing, addr));
         }
 
-        public int AddBooking(int bookingId, int societyId, int roomId, DateTime start)
+        public int AddBooking(int societyId, int roomId, DateTime start)
         {
-            return AddBooking(new Booking(bookingId, societyId, roomId, start));
+            return AddBooking(new Booking(0, societyId, roomId, start));
         }
 
         //Returns 1 if booking is successful
@@ -156,6 +127,7 @@ namespace DAB2_2
             var col = _database.GetCollection<Booking>("Bookings");
             if (!Queries.CheckBooking(book))
             {
+                book.BookingId = Queries.NextBooking();
                 col.InsertOne(book);
                 return 1;
             }
