@@ -1,6 +1,6 @@
 ﻿//using System;
 //using System.Linq;
-using DAB2_2.Data;
+
 using DAB2_2.Models;
 using DAB2_3.Models;
 using Microsoft.EntityFrameworkCore;
@@ -137,30 +137,30 @@ namespace DAB2_2
             return res.RoomId;
         }
 
-        public static bool CheckCode(Room room, Code code)
+        public static bool CheckCode(Room room, int pin)
         {
-            return CheckCode(room.RoomId, code.Pin);
+            return CheckCode(room.RoomId, pin);
         }
         public static bool CheckCode(int roomId, int pin)
         {
             var col = _database.GetCollection<Room>("Rooms");
             var filter = Builders<Room>.Filter.
                 Where(r => r.RoomId == roomId
-                && r.Codes.Where(c => c.Pin == pin).Any());
+                && r.Codes.Contains(pin));
             var res = col.Find(filter).ToList<Room>();
             return res.Any();
         }
 
-        public static bool CheckKey(Room room, Key key)
+        public static bool CheckKey(Room room)
         {
-            return CheckKey(room.RoomId, key.KeyId);
+            return CheckKey(room.RoomId);
         }
-        public static bool CheckKey(int roomId, int keyId)
+        public static bool CheckKey(int roomId)
         {
             var col = _database.GetCollection<Room>("Rooms");
             var filter = Builders<Room>.Filter.
                 Where(r => r.RoomId == roomId
-                && r.Key.KeyId == keyId);
+                && r.KeyAddressId != null);
             var res = col.Find(filter).ToList<Room>();
             return res.Any();
         }
@@ -195,7 +195,54 @@ namespace DAB2_2
         }
 
 
+        public static void GetAllRooms()
+        {
+            var col = _database.GetCollection<Room>("Rooms");
+            var res = col.Find(r => true).ToEnumerable();
+            foreach(var r in res)
+            {
+                var r_col = _database.GetCollection<Address>("Addresses");
+                var r_filter = Builders<Address>.Filter.Where(a => a.AddressId == r.AddressId);
+                var r_res = r_col.Find(r_filter).First();
 
+                Console.WriteLine($"{r.RoomName} : {r_res.Street} {r_res.Number} - {r_res.Zip}");
+
+            }
+        }
+
+
+        public static void GetSocietiesByActivity()
+        {
+            var col = _database.GetCollection<Society>("Societies");
+            var res = col.Find(s => true).SortBy(s => s.Activity).ToEnumerable();
+
+            foreach(var s in res)
+            {
+               
+
+                if (s.ChairmanId != null)
+                {
+                    var r_col = _database.GetCollection<Address>("Addresses");
+                    var r_filter = Builders<Address>.Filter.Where(a => a.AddressId == s.AddressId);
+                    var r_res = r_col.Find(r_filter).First();
+
+                    var c_col = _database.GetCollection<Person>("Persons");
+                    var c_filter = Builders<Person>.Filter.Where(p=>p.Cpr == s.ChairmanId);
+                    var c_res = c_col.Find(c_filter).First();
+                    Console.WriteLine($"{s.Activity} - {s.Name}, {s.Cvr}: {r_res.Zip}, {r_res.Street} {r_res.Number}, Chairman is: {c_res.FirstName} {c_res.LastName}");
+                }
+                else
+                {
+                    var r_col = _database.GetCollection<Address>("Addresses");
+                    var r_filter = Builders<Address>.Filter.Where(a => a.AddressId == s.AddressId);
+                    var r_res = r_col.Find(r_filter).First();
+
+                    Console.WriteLine($"{s.Activity} - {s.Name}, {s.Cvr}: {r_res.Zip}, {r_res.Street} {r_res.Number}");
+                }
+
+            }
+                    }
+        //          
     }
 }
 
@@ -333,30 +380,7 @@ namespace DAB2_2
 //            foreach (var r in list) Console.WriteLine($"{r.RoomName}: {r.Zip}, {r.Street} {r.Number}");
 //        }
 
-//        public static void GetSocietiesByActivity(MyDbContext context, string activity)
-//        {
-//            var list = from s in context.Societies
-//                orderby s.Activity
-//                select new
-//                {
-//                    s.Activity,
-//                    s.Name,
-//                    s.Cvr,
-//                    s.Address.Zip,
-//                    s.Address.Street,
-//                    s.Address.Number,
-//                    s.Chairman.FirstName,
-//                    s.Chairman.LastName
-//                };
-
-//            foreach (var s in list)
-//                if (s.FirstName == null)
-//                    Console.WriteLine($"{s.Activity} - {s.Name}, {s.Cvr}: {s.Zip}, {s.Street} {s.Number}");
-//                else
-//                    Console.WriteLine(
-//                        $"{s.Activity} - {s.Name}, {s.Cvr}: {s.Zip}, {s.Street} {s.Number}, Chairman is: {s.FirstName} {s.LastName}");
-//        }
-
+        
 //        public static void GetAllBookings(MyDbContext context)
 //        {
 //            var list = context.Bookings
@@ -366,9 +390,9 @@ namespace DAB2_2
 //                .AsEnumerable()
 //                .GroupBy(b => b.RoomId);
 
-//            foreach (var q in list)
+//            foreach (var q in list)k
 //            {
-//                Console.WriteLine($"Room: {q.Key}, booked {q.Count()} time(s)");
+//                Console.WriteLine($"Room: {q.Key}, booed {q.Count()} time(s)");
 
 //                foreach (var b in q)
 //                    if (b.Society.Chairman?.FirstName == null)

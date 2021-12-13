@@ -22,11 +22,7 @@ namespace DAB2_2.Models
 
         public int SocietyId { get; set; }
 
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime TimeStart { get; set; }
 
-        public Room Room { get; set; }
-
-        public Society Society { get; set; }
     }
 }
