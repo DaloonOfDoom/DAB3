@@ -151,10 +151,7 @@ namespace DAB2_2
             return 0;
         }
 
-        public int AddCode()
-        {
 
-        }
 
 
         //public int AddCode(int pin, int roomId)
