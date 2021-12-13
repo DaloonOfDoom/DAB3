@@ -29,28 +29,21 @@ namespace DAB2_2
         public int AddAddress(Address adr)
         {
             var col = _database.GetCollection<Address>("Addresses");
-
-            if (col.Find(x => x.AddressId == adr.AddressId).ToString() == null)
+            var filter = Builders<Address>.Filter.Where(x => x.AddressId == adr.AddressId);
+            var res = col.Find(filter).ToList<Address>();
+            if ( !res.Any())
             {
                 col.InsertOne(adr);
 
                 return 1;
             }
-            Console.WriteLine()
-            var check = col.Find<Address>(x => x.AddressId == adr.AddressId).ToList();
-            foreach(var r in check)
-            {
-               
-                Console.WriteLine($"{r.AddressId} {r.ObjId} ");
-            }
-            Console.WriteLine("double i address");
             return 0;
         }
 
-        public int AddSociety(int cvr, string name, string activity, int addr, int? chairman = null)
-        {
-            return AddSociety(new Society(cvr, name, activity, addr, chairman));
-        }
+        //public int AddSociety(int cvr, string name, string activity, int addr, int? chairman = null)
+        //{
+        //    return AddSociety(new Society(cvr, name, activity, addr, chairman));
+        //}
 
         public int AddSociety(Society s)
         {
