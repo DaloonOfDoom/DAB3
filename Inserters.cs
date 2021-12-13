@@ -151,7 +151,18 @@ namespace DAB2_2
             return 0;
         }
 
-
+        public int AddCode(int roomId, int pin)
+        {
+            if (!Queries.CheckCode(roomId, pin))
+            {
+                var col = _database.GetCollection<Room>("Rooms");
+                var filter = Builders<Room>.Filter.Eq("RoomId", roomId);
+                var update = Builders<Room>.Update.Set(r => r.Codes[r.Codes.Length], pin);
+                col.UpdateOne(filter, update);
+                return 1;
+            }
+            return 0;
+        }
 
 
         //public int AddCode(int pin, int roomId)
