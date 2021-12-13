@@ -44,10 +44,10 @@ namespace DAB2_2
         //not done
         public int AddSociety(Society soc)
         {
+            var col = _database.GetCollection<Society>("Societies");
             if (!Queries.CheckSociety(soc))
             {
-                if (soc.KeyholderId != null && !Queries.CheckKeyholder(_context, (int)soc.KeyholderId))
-                    soc.KeyholderId = null;
+                col.InsertOne(soc);
 
                 return 1;
             }
@@ -61,45 +61,52 @@ namespace DAB2_2
             return AddSociety(new Society(cvr, name, activity, addr, chairman, keyholder));
         }
 
-        //        public int AddKeyholder(int cvr, Person person)
-        //        {
-        //            if (!Queries.CheckSociety(_context, cvr) || person.License == null || person.Phonenumber == null) return 0;
+        public int AddKeyholder(int cvr, Person person)
+        {
+            if (Queries.CheckSociety(cvr) && !Queries.CheckCanBook(cvr))
+            {
+                var col = _database.GetCollection<Society>("Societies");
+                if (!Queries.CheckPerson(person))
+                {
 
-        //            var res = _context.Persons.SingleOrDefault(p =>
-        //                p.Cpr == person.Cpr);
-        //            if (res == null)
-        //            {
-        //                AddPerson(person);
-        //            }
-        //            else
-        //            {
-        //                res.License = person.License;
-        //                res.Phonenumber = person.Phonenumber;
-        //                _context.SaveChanges();
-        //            }
+                }
+            }
 
-        //            var soc = _context.Societies.SingleOrDefault(s =>
-        //                s.Cvr == cvr);
-        //            soc.KeyholderId = person.Cpr;
-        //            _context.SaveChanges();
-        //            return 1;
-        //        }
+            var res = _context.Persons.SingleOrDefault(p =>
+                p.Cpr == person.Cpr);
+            if (res == null)
+            {
+                AddPerson(person);
+            }
+            else
+            {
+                res.License = person.License;
+                res.Phonenumber = person.Phonenumber;
+                _context.SaveChanges();
+            }
 
-        //        public int AddKeyholder(int cvr, int cpr, string firstName, string lastName, int addr, int? license = null,
-        //            int? phonenumber = null)
-        //        {
-        //            return AddKeyholder(cvr, new Person(cpr, firstName, lastName, addr, license, phonenumber));
-        //        }
+            var soc = _context.Societies.SingleOrDefault(s =>
+                s.Cvr == cvr);
+            soc.KeyholderId = person.Cpr;
+            _context.SaveChanges();
+            return 1;
+        }
 
-        //        public int AddKeyholder(int cvr, int cpr)
-        //        {
-        //            if (!Queries.CheckSociety(_context, cvr) || !Queries.CheckKeyholder(_context, cpr)) return 0;
-        //            var soc = _context.Societies.SingleOrDefault(s =>
-        //                s.Cvr == cvr);
-        //            soc.KeyholderId = cpr;
-        //            _context.SaveChanges();
-        //            return 1;
-        //        }
+        public int AddKeyholder(int cvr, int cpr, string firstName, string lastName, int addr, int? license = null,
+            int? phonenumber = null)
+        {
+            return AddKeyholder(cvr, new Person(cpr, firstName, lastName, addr, license, phonenumber));
+        }
+
+        public int AddKeyholder(int cvr, int cpr)
+        {
+            if (!Queries.CheckSociety(_context, cvr) || !Queries.CheckKeyholder(_context, cpr)) return 0;
+            var soc = _context.Societies.SingleOrDefault(s =>
+                s.Cvr == cvr);
+            soc.KeyholderId = cpr;
+            _context.SaveChanges();
+            return 1;
+        }
 
         public int AddPerson(Person per)
         {
